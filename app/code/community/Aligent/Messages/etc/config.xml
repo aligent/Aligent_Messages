@@ -2,9 +2,21 @@
 <config>
     <modules>
         <Aligent_Messages>
-            <version>0.1.2</version>
+            <version>0.1.0</version>
         </Aligent_Messages>
     </modules>
+    <global>
+        <models>
+            <aligent_messages>
+                <class>Aligent_Messages_Model</class>
+            </aligent_messages>
+        </models>
+        <helpers>
+            <aligent_messages>
+                <class>Aligent_Messages_Helper</class>
+            </aligent_messages>
+        </helpers>
+    </global>
     <frontend>
         <events>
             <controller_front_send_response_before>
@@ -17,23 +29,51 @@
                 </observers>
             </controller_front_send_response_before>
             <controller_front_send_response_after>
-            <observers>
-                <capture_messages_after>
-                    <type>singleton</type>
-                    <class>aligent_messages/messages</class>
-                    <method>messagesControllerFrontSendResponseAfter</method>
-                </capture_messages_after>
-            </observers>
+                <observers>
+                    <capture_messages_after>
+                        <type>singleton</type>
+                        <class>aligent_messages/messages</class>
+                        <method>messagesControllerFrontSendResponseAfter</method>
+                    </capture_messages_after>
+                </observers>
             </controller_front_send_response_after>
             <core_session_abstract_add_message>
-            <observers>
-                <aligent_messages>
-                    <type>singleton</type>
-                    <class>aligent_messages/messages</class>
-                    <method>addMessageDetails</method>
-                </aligent_messages>
-            </observers>
+                <observers>
+                    <aligent_messages>
+                        <type>singleton</type>
+                        <class>aligent_messages/messages</class>
+                        <method>addMessageDetails</method>
+                    </aligent_messages>
+                </observers>
             </core_session_abstract_add_message>
         </events>
+        <layout>
+            <updates>
+                <aligent_websiteswitcher>
+                    <file>aligent/messages.xml</file>
+                </aligent_websiteswitcher>
+            </updates>
+        </layout>
     </frontend>
+    <adminhtml>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <aligent_messages>
+                                            <title>Aligent Messages Configuration</title>
+                                        </aligent_messages>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
 </config>

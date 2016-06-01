@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Aligent_Messages>
+            <active>true</active>
+            <codePool>local</codePool>
+            <depends></depends>
+        </Aligent_Messages>
+    </modules>
+</config>

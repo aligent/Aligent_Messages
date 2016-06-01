@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * system.xml
+ *
+ * @category  Aligent
+ * @package   Aligent_Messages
+ * @author    Brent Honeybone <brent@aligent.com.au>
+ * @copyright 2014 Aligent Consulting.
+ * @license   All Rights Reserved
+ * @link      http://www.aligent.com.au/
+ */
+-->
+<config>
+    <tabs>
+        <aligent translate="label">
+            <label>Aligent</label>
+            <sort_order>9999</sort_order>
+        </aligent>
+    </tabs>
+    <sections>
+        <aligent_messages translate="label">
+            <label>Messages</label>
+            <tab>aligent</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>1000</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <settings translate="label">
+                    <label>Messages</label>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enable_cookie translate="label comment">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <comment>Send all Magento session messages in Cookie</comment>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable_cookie>
+                        <cookie_name translate="label comment">
+                            <label>Cookie Name</label>
+                            <comment>The name of the cookie to send. If empty defaults to mage_msgs.</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>200</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </cookie_name>
+                    </fields>
+                </settings>
+            </groups>
+        </aligent_messages>
+    </sections>
+</config>

@@ -1,0 +1,3 @@
+app/code/community/Aligent/Messages app/code/community/Aligent/Messages
+app/design/frontend/base/default/layout/aligent/messages.xml app/design/frontend/base/default/layout/aligent/messages.xml
+app/etc/modules/Aligent_Messages.xml app/etc/modules/Aligent_Messages.xml

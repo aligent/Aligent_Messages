@@ -6,6 +6,11 @@
         </Aligent_Messages>
     </modules>
     <global>
+        <blocks>
+            <aligent_messages>
+                <class>Aligent_Messages_Block</class>
+            </aligent_messages>
+        </blocks>
         <models>
             <aligent_messages>
                 <class>Aligent_Messages_Model</class>
@@ -49,9 +54,9 @@
         </events>
         <layout>
             <updates>
-                <aligent_websiteswitcher>
+                <aligent_messages>
                     <file>aligent/messages.xml</file>
-                </aligent_websiteswitcher>
+                </aligent_messages>
             </updates>
         </layout>
     </frontend>

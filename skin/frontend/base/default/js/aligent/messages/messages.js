@@ -3,6 +3,56 @@ if(typeof Aligent === 'undefined') {
 }
 
 /* /////////////////////////////
+ //// Event Manager
+ /////////////////////////////// */
+
+if(typeof Aligent.EventManager === 'undefined') {
+    Aligent.EventManager = Class.create({
+
+        listen: function (event, callback, el) {
+            if (this._events[event]) {
+                this._events[event].push({callback: callback, el: el});
+            } else {
+                this._events[event] = [{callback: callback, el: el}];
+            }
+            return this;
+        },
+
+        stopListening: function (event, callback) {
+            if (!this._events[event]) return false;
+            if (typeof callback == 'undefined') {
+                this._events[event] = null;
+            } else {
+                var i = 0, index = -1;
+                for (var item in this._events[event]) {
+                    if (this._events[event].callback == callback) {
+                        index = i;
+                    }
+                    i++;
+                }
+
+                if (index != -1) {
+                    this._events[event].splice(index, 1);
+                }
+            }
+            return this;
+        },
+
+        dispatch: function (event, memo) {
+            var i = 0, that = this;
+
+            if (!this._events[event]) return false;
+
+            for (i; i < this._events[event].length; i++) {
+                this._events[event][i].callback.apply(that._events[event][i].el, [that, memo]);
+            }
+
+            return this;
+        }
+    });
+}
+
+/* /////////////////////////////
  //// Notice Manager
  /////////////////////////////// */
 
@@ -65,54 +115,143 @@ if(typeof Aligent.NoticeManager === 'undefined') {
 
     });
 }
+
 /* /////////////////////////////
- //// Event Manager
+ //// Notice
  /////////////////////////////// */
 
-if(typeof Aligent.EventManager === 'undefined') {
-    Aligent.EventManager = Class.create({
+/* A single notice, can be run manually or added into the notice manager to be queued */
 
-        listen: function (event, callback, el) {
-            if (this._events[event]) {
-                this._events[event].push({callback: callback, el: el});
-            } else {
-                this._events[event] = [{callback: callback, el: el}];
+if(typeof Aligent.Notice === 'undefined') {
+    Aligent.Notice = Class.create(Aligent.EventManager, {
+        initialize: function (el, message, length, animationDelay, classes, id) {
+            this._events = {};
+
+            if (typeof(length) == 'undefined') length = 3000;
+            if (typeof(animationDelay) == 'undefined') animationDelay = 0;
+            if (animationDelay && !length) {
+                length = 3000;
             }
-            return this;
+
+            this._el = el;
+            this._message = message;
+            this._length = length;
+            this._animationDelay = animationDelay;
+            this._classes = Object.prototype.toString.call(classes) === '[object Array]' ? classes : [];
+            this._id = id || this._getRandomInt(1, 1000000000);
+
+            this._el.writeAttribute('id', this._id);
+
+            this._hasRun = false;
+
+            this.delayTimer = null;
+            this.animationDelayTimer = null;
         },
 
-        stopListening: function (event, callback) {
-            if (!this._events[event]) return false;
-            if (typeof callback == 'undefined') {
-                this._events[event] = null;
-            } else {
-                var i = 0, index = -1;
-                for (var item in this._events[event]) {
-                    if (this._events[event].callback == callback) {
-                        index = i;
-                    }
-                    i++;
-                }
-
-                if (index != -1) {
-                    this._events[event].splice(index, 1);
-                }
-            }
-            return this;
+        _getRandomInt: function (min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
         },
 
-        dispatch: function (event, memo) {
-            var i = 0, that = this;
+        getAnimationDelay: function () {
+            return this._animationDelay;
+        },
 
-            if (!this._events[event]) return false;
+        getLength: function () {
+            return this._length;
+        },
 
-            for (i; i < this._events[event].length; i++) {
-                this._events[event][i].callback.apply(that._events[event][i].el, [that, memo]);
+        getMessage: function () {
+            return this._message;
+        },
+
+        getHasRun: function () {
+            return this._hasRun;
+        },
+
+        onClose: function () {
+            clearTimeout(this.animationDelayTimer);
+            clearTimeout(this.delayTimer);
+
+            this.animationDelayTimer = null;
+            this.delayTimer = null;
+
+            if (this._animationDelay) {
+                this._wait2();
+            } else {
+                this._complete();
+            }
+        },
+
+        show: function () {
+            var _this = this;
+
+            this._el.update(this._message);
+
+            this._el.select('.close').invoke('observe', 'click', this.onClose.bind(this));
+
+            this._classes.each(function (className) {
+                _this._el.addClassName(className);
+            });
+
+            this._el.addClassName('active');
+
+            if (this._animationDelay) {
+                this._wait();
+            } else {
+                this._delay();
             }
 
-            return this;
+            this.dispatch(Aligent.Notice.STARTED);
+        },
+
+        _wait: function () {
+            clearTimeout(this.animationDelayTimer);
+            this.animationDelayTimer = null;
+            this.animationDelayTimer = this._delay.bind(this).delay(this._animationDelay / 1000);
+        },
+
+        _delay: function () {
+            this.dispatch(Aligent.Notice.DISPLAYED);
+
+            if (this._length === 0) {
+                return;
+            }
+
+            clearTimeout(this.delayTimer);
+            this.delayTimer = null;
+
+            if (this._animationDelay) {
+                this.delayTimer = this._wait2.bind(this).delay(this._length / 1000);
+            } else {
+                this.delayTimer = this._complete.bind(this).delay(this._length / 1000);
+            }
+        },
+
+        _wait2: function () {
+            this._el.removeClassName('active');
+
+            clearTimeout(this.animationDelayTimer);
+            this.animationDelayTimer = null;
+
+            this.animationDelayTimer = this._complete.bind(this).delay(this._animationDelay / 1000);
+        },
+
+        _complete: function () {
+            var _this = this;
+            this._el.update('');
+            this._hasRun = true;
+            this._el.removeClassName('active');
+            this._classes.each(function (className) {
+                _this._el.removeClassName(className);
+            });
+            this.dispatch(Aligent.Notice.FINISHED);
         }
+
     });
+
+    Aligent.Notice.STARTED = 'popupNoticeStarted';
+    Aligent.Notice.FINISHED = 'popupNoticeFinished';
+    Aligent.Notice.DISPLAYED = 'popupNoticeDisplayed';
 }
 
 /* /////////////////////////////

@@ -2,7 +2,10 @@
 <layout version="0.1.0">
     <default>
         <reference name="head">
-            <action method="addItem"><type>skin_js</type><name>aligent/messages/messages.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/aligent/messages/messages.js</name></action>
+        </reference>
+        <reference name="after_body_start">
+            <block type="aligent_messages/messages" name="aligent.global.messages" template="aligent/messages/messages.phtml" />
         </reference>
     </default>
 </layout>

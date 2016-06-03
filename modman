@@ -1,4 +1,5 @@
 app/code/community/Aligent/Messages app/code/community/Aligent/Messages
 app/design/frontend/base/default/layout/aligent/messages.xml app/design/frontend/base/default/layout/aligent/messages.xml
+app/design/frontend/base/default/template/aligent/messages/messages.phtml app/design/frontend/base/default/template/aligent/messages/messages.phtml
 app/etc/modules/Aligent_Messages.xml app/etc/modules/Aligent_Messages.xml
 skin/frontend/base/default/js/aligent/messages/messages.js skin/frontend/base/default/js/aligent/messages/messages.js

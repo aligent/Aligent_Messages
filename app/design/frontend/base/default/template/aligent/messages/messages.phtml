@@ -1,0 +1,20 @@
+<?php if ($this->isEnabled()): ?>
+    <div class="notice-container"><div class="notice"></div></div>
+
+    <script>
+        var config = {
+            cookieName: '<?php echo $this->getCookieName() ?>',
+            frontendCookieName: 'frontend_msgs',
+            delay: 5000,
+            cssAnimationDelay: 500,
+            sortOrder: [ 'error', 'success' ],
+            manualClose: [ 'error' ]
+        };
+
+        Aligent.messages = new Aligent.Messages(config);
+
+        Event.observe(document, 'dom:loaded', function() {
+            Aligent.messages.process();
+        });
+    </script>
+<?php endif; ?>
